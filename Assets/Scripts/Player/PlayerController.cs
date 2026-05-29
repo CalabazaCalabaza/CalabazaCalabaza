@@ -25,6 +25,8 @@ public class PlayerController : MonoBehaviour
     private bool isFacingRight = true;
     private bool isDead;
     private int jumpsRemaining;     // Decrements on each jump, resets to maxJumps on landing
+    public bool IsFacingRight => isFacingRight;
+
 
     // Pre-hashed animator parameter IDs for performance (avoids string lookups every frame)
     private static readonly int HashSpeed = Animator.StringToHash("Speed");
