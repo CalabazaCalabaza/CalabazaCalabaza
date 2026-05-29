@@ -14,4 +14,7 @@ public static class GameEvents
     public static void TriggerPlayerHit() => OnPlayerHit?.Invoke();
     public static void TriggerLivesChanged(int current) => OnLivesChanged?.Invoke(current);
     public static void TriggerGoalReached() => OnGoalReached?.Invoke();
+
+    public static event Action OnCheckpointActivated;
+    public static void TriggerCheckpointActivated() => OnCheckpointActivated?.Invoke();
 }

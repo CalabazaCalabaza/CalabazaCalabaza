@@ -26,4 +26,9 @@ public class LevelTrigger : MonoBehaviour
         Gizmos.color = new Color(0.5f, 0f, 1f, 0.3f);
         Gizmos.DrawCube(transform.position, GetComponent<Collider2D>().bounds.size);
     }
+
+    public void ResetTrigger()
+    {
+        triggered = false;
+    }
 }

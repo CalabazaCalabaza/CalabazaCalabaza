@@ -11,6 +11,10 @@ public class GameManager : MonoBehaviour
 
     private GameObject player;
 
+    private Vector3 respawnPosition;
+    public Vector3 RespawnPosition => respawnPosition;
+
+
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -19,6 +23,7 @@ public class GameManager : MonoBehaviour
             return;
         }
         Instance = this;
+        respawnPosition = spawnPoint.position;
     }
 
     private void OnEnable()
@@ -42,6 +47,12 @@ public class GameManager : MonoBehaviour
         StartCoroutine(RespawnRoutine());
     }
 
+    public void SetCheckpoint(Vector3 position)
+    {
+        respawnPosition = position;
+        Debug.Log($"Checkpoint set at {position}");
+    }
+
     private IEnumerator RespawnRoutine()
     {
         yield return new WaitForSeconds(respawnDelay);
@@ -52,7 +63,7 @@ public class GameManager : MonoBehaviour
     {
         if (player == null) return;
 
-        player.transform.position = spawnPoint.position;
+        player.transform.position = respawnPosition;
 
         var rb = player.GetComponent<Rigidbody2D>();
         rb.bodyType = RigidbodyType2D.Dynamic;
@@ -61,4 +72,6 @@ public class GameManager : MonoBehaviour
         player.GetComponent<PlayerController>().Revive();
         player.GetComponent<HealthSystem>().ResetLives();
     }
+
+
 }
