@@ -61,4 +61,11 @@ public class HealthSystem : MonoBehaviour
         GameEvents.TriggerLivesChanged(CurrentLives);
     }
 
+
+    public void InstantKill()
+    {
+        CurrentLives = 0;
+        GameEvents.TriggerLivesChanged(CurrentLives);
+        GameEvents.TriggerPlayerDied();
+    }
 }

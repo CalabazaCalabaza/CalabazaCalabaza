@@ -27,6 +27,8 @@ public class PlayerController : MonoBehaviour
     private int jumpsRemaining;     // Decrements on each jump, resets to maxJumps on landing
     public bool IsFacingRight => isFacingRight;
     private bool inputEnabled = true;
+    private float speedMultiplier = 1f;
+
 
 
 
@@ -39,10 +41,12 @@ public class PlayerController : MonoBehaviour
 
 
 
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
+        inputEnabled = true;
         GameManager.Instance.RegisterPlayer(gameObject);
 
     }
@@ -84,7 +88,7 @@ public class PlayerController : MonoBehaviour
     // Sets horizontal velocity directly, preserving vertical velocity from gravity
     private void Move()
     {
-        rb.linearVelocity = new Vector2(moveInput * moveSpeed, rb.linearVelocity.y);
+        rb.linearVelocity = new Vector2(moveInput * moveSpeed * speedMultiplier, rb.linearVelocity.y);
 
         if (moveInput > 0 && !isFacingRight) Flip();
         else if (moveInput < 0 && isFacingRight) Flip();
@@ -147,6 +151,11 @@ public class PlayerController : MonoBehaviour
             rb.linearVelocity = Vector2.zero;
             UpdateAnimator();
         }
+    }
+
+    public void SetSpeedMultiplier(float multiplier)
+    {
+        speedMultiplier = multiplier;
     }
 
     // Draws the ground check radius in the Scene view for easier positioning

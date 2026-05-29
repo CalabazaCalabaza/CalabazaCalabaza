@@ -28,6 +28,8 @@ public class GameManager : MonoBehaviour
         Instance = this;
         respawnPosition = spawnPoint.position;
         checkpointLives = player != null ? player.GetComponent<HealthSystem>().CurrentLives : 3;
+        Debug.Log($"Spawn position set to: {respawnPosition}");
+
 
     }
 
@@ -35,12 +37,14 @@ public class GameManager : MonoBehaviour
     {
         GameEvents.OnPlayerDied += OnPlayerDied;
         GameEvents.OnGoalReached += OnGoalReached;
+        GameEvents.OnTimerExpired += OnTimerExpired;
     }
 
     private void OnDisable()
     {
         GameEvents.OnPlayerDied -= OnPlayerDied;
         GameEvents.OnGoalReached -= OnGoalReached;
+        GameEvents.OnTimerExpired -= OnTimerExpired;
     }
 
     public void RegisterPlayer(GameObject playerObject)
@@ -80,6 +84,7 @@ public class GameManager : MonoBehaviour
 
         player.GetComponent<PlayerController>().Revive();
         player.GetComponent<HealthSystem>().SetLives(checkpointLives);
+        GameEvents.TriggerPlayerRespawned();
 
     }
 
@@ -91,5 +96,10 @@ public class GameManager : MonoBehaviour
         GameEvents.TriggerMapReveal();
     }
 
+    private void OnTimerExpired()
+    {
+        Debug.Log("Time is up");
+        player.GetComponent<HealthSystem>().InstantKill();
+    }
 
 }
