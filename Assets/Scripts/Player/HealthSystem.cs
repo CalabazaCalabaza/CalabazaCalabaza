@@ -55,4 +55,10 @@ public class HealthSystem : MonoBehaviour
         CurrentLives = maxLives;
         GameEvents.TriggerLivesChanged(CurrentLives);
     }
+    public void SetLives(int lives)
+    {
+        CurrentLives = lives;
+        GameEvents.TriggerLivesChanged(CurrentLives);
+    }
+
 }

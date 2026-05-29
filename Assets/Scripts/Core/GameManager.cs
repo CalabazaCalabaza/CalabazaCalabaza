@@ -14,6 +14,9 @@ public class GameManager : MonoBehaviour
     private Vector3 respawnPosition;
     public Vector3 RespawnPosition => respawnPosition;
 
+    private int checkpointLives;
+
+
 
     private void Awake()
     {
@@ -24,6 +27,8 @@ public class GameManager : MonoBehaviour
         }
         Instance = this;
         respawnPosition = spawnPoint.position;
+        checkpointLives = player != null ? player.GetComponent<HealthSystem>().CurrentLives : 3;
+
     }
 
     private void OnEnable()
@@ -50,6 +55,8 @@ public class GameManager : MonoBehaviour
     public void SetCheckpoint(Vector3 position)
     {
         respawnPosition = position;
+        checkpointLives = player.GetComponent<HealthSystem>().CurrentLives;
+
         Debug.Log($"Checkpoint set at {position}");
     }
 
@@ -70,7 +77,8 @@ public class GameManager : MonoBehaviour
         rb.linearVelocity = Vector2.zero;
 
         player.GetComponent<PlayerController>().Revive();
-        player.GetComponent<HealthSystem>().ResetLives();
+        player.GetComponent<HealthSystem>().SetLives(checkpointLives);
+
     }
 
 
