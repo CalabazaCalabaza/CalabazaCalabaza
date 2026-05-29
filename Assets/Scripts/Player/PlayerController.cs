@@ -33,11 +33,15 @@ public class PlayerController : MonoBehaviour
     private static readonly int HashIsGrounded = Animator.StringToHash("IsGrounded");
     private static readonly int HashDie = Animator.StringToHash("Die");
     private static readonly int HashJump = Animator.StringToHash("Jump");
+    private static readonly int HashRevive = Animator.StringToHash("Revive");
+
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
+        GameManager.Instance.RegisterPlayer(gameObject);
+
     }
 
     private void Update()
@@ -115,13 +119,19 @@ public class PlayerController : MonoBehaviour
         rb.linearVelocity = Vector2.zero;
         rb.bodyType = RigidbodyType2D.Kinematic; // Disables physics so the corpse doesn't slide
         anim.SetTrigger(HashDie);
-        // GameEvents.TriggerPlayerDied();  <- TODO
+        GameEvents.TriggerPlayerDied(); 
     }
+    public void Revive()
+    {
+        isDead = false;
+        anim.SetTrigger(HashRevive);
+    }
+
 
     // Called via Animation Event on the last frame of the death animation
     public void OnDeathAnimationFinished()
     {
-        // GameManager.Instance.RespawnPlayer();  <- TODO
+        GameManager.Instance.RespawnPlayer(); 
     }
 
     // Draws the ground check radius in the Scene view for easier positioning
@@ -131,4 +141,7 @@ public class PlayerController : MonoBehaviour
         Gizmos.color = Color.green;
         Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
     }
+
+
+
 }
