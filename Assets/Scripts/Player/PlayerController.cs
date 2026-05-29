@@ -26,6 +26,8 @@ public class PlayerController : MonoBehaviour
     private bool isDead;
     private int jumpsRemaining;     // Decrements on each jump, resets to maxJumps on landing
     public bool IsFacingRight => isFacingRight;
+    private bool inputEnabled = true;
+
 
 
     // Pre-hashed animator parameter IDs for performance (avoids string lookups every frame)
@@ -34,6 +36,7 @@ public class PlayerController : MonoBehaviour
     private static readonly int HashDie = Animator.StringToHash("Die");
     private static readonly int HashJump = Animator.StringToHash("Jump");
     private static readonly int HashRevive = Animator.StringToHash("Revive");
+
 
 
     private void Awake()
@@ -47,6 +50,7 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         if (isDead) return;
+        if (!inputEnabled) return;
 
         // Read raw horizontal input (-1 = left, 0 = idle, 1 = right)
         moveInput = Input.GetAxisRaw("Horizontal");
@@ -132,6 +136,17 @@ public class PlayerController : MonoBehaviour
     public void OnDeathAnimationFinished()
     {
         GameManager.Instance.RespawnPlayer(); 
+    }
+
+    public void SetInputEnabled(bool value)
+    {
+        inputEnabled = value;
+        if (!value)
+        {
+            moveInput = 0f;
+            rb.linearVelocity = Vector2.zero;
+            UpdateAnimator();
+        }
     }
 
     // Draws the ground check radius in the Scene view for easier positioning

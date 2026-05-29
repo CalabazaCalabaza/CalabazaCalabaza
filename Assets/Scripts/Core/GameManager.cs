@@ -34,11 +34,13 @@ public class GameManager : MonoBehaviour
     private void OnEnable()
     {
         GameEvents.OnPlayerDied += OnPlayerDied;
+        GameEvents.OnGoalReached += OnGoalReached;
     }
 
     private void OnDisable()
     {
         GameEvents.OnPlayerDied -= OnPlayerDied;
+        GameEvents.OnGoalReached -= OnGoalReached;
     }
 
     public void RegisterPlayer(GameObject playerObject)
@@ -79,6 +81,14 @@ public class GameManager : MonoBehaviour
         player.GetComponent<PlayerController>().Revive();
         player.GetComponent<HealthSystem>().SetLives(checkpointLives);
 
+    }
+
+    private void OnGoalReached()
+    {
+        Debug.Log("Goal reached");
+        // Freeze player input while the map reveal plays
+        player.GetComponent<PlayerController>().SetInputEnabled(false);
+        GameEvents.TriggerMapReveal();
     }
 
 
