@@ -7,7 +7,6 @@ public class PlayerController : MonoBehaviour
 {
     [Header("Jump")]
     [SerializeField] private float jumpForce = 10f;      // Vertical impulse applied on jump
-    [SerializeField] private int maxJumps = 1;           // Max jumps before landing (set to 2 for double jump)
 
     [Header("Movement")]
     [SerializeField] private float moveSpeed = 5f;       // Horizontal movement speed in units/second
@@ -20,11 +19,16 @@ public class PlayerController : MonoBehaviour
     private Rigidbody2D rb;
     private Animator anim;
 
+    [Header("Coyote Time")]
+    [SerializeField] private float coyoteTimeDuration = 0.12f; // Segundos de gracia tras caer de un borde
+
+    private float coyoteTimeCounter; // Countdown, > 0 significa que aún puede saltar
+    private bool hasJumped; // True cuando el jugador saltó y aún no aterrizó
+
     private float moveInput;        // Raw horizontal axis input (-1, 0 or 1)
     private bool isGrounded;        // True when the ground check detects a ground collider
     private bool isFacingRight = true;
     private bool isDead;
-    private int jumpsRemaining;     // Decrements on each jump, resets to maxJumps on landing
     public bool IsFacingRight => isFacingRight;
     private bool inputEnabled = true;
     private float speedMultiplier = 1f;
@@ -38,6 +42,9 @@ public class PlayerController : MonoBehaviour
     private static readonly int HashDie = Animator.StringToHash("Die");
     private static readonly int HashJump = Animator.StringToHash("Jump");
     private static readonly int HashRevive = Animator.StringToHash("Revive");
+    private static readonly int HashIsMoving = Animator.StringToHash("isMoving");
+    private static readonly int HashIsJumping = Animator.StringToHash("isJumping");
+    private static readonly int HashIsDeadBool = Animator.StringToHash("isDead");
 
 
 
@@ -59,8 +66,9 @@ public class PlayerController : MonoBehaviour
         // Read raw horizontal input (-1 = left, 0 = idle, 1 = right)
         moveInput = Input.GetAxisRaw("Horizontal");
 
-        // Jump input is handled in Update to avoid missing button presses between fixed frames
-        if (Input.GetButtonDown("Jump") && jumpsRemaining > 0)
+        bool canJump = !hasJumped && (isGrounded || coyoteTimeCounter > 0f);
+
+        if (Input.GetButtonDown("Jump") && canJump)
             Jump();
 
         UpdateAnimator();
@@ -82,7 +90,14 @@ public class PlayerController : MonoBehaviour
         anim.SetBool(HashIsGrounded, isGrounded);
 
         if (isGrounded)
-            jumpsRemaining = maxJumps;
+        {
+            hasJumped = false;
+            coyoteTimeCounter = coyoteTimeDuration;
+        }
+        else
+        {
+            coyoteTimeCounter -= Time.fixedDeltaTime;
+        }
     }
 
     // Sets horizontal velocity directly, preserving vertical velocity from gravity
@@ -98,7 +113,8 @@ public class PlayerController : MonoBehaviour
     private void Jump()
     {
         rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
-        jumpsRemaining--;
+        hasJumped = true;
+        coyoteTimeCounter = 0f;
         anim.SetTrigger(HashJump);
     }
 
@@ -117,6 +133,8 @@ public class PlayerController : MonoBehaviour
     private void UpdateAnimator()
     {
         anim.SetFloat(HashSpeed, Mathf.Abs(moveInput));
+        anim.SetBool(HashIsMoving, moveInput != 0f);
+        anim.SetBool(HashIsJumping, !isGrounded);
     }
 
     // Called externally (e.g. by a hazard or kill zone) to trigger the death sequence
@@ -125,14 +143,17 @@ public class PlayerController : MonoBehaviour
         if (isDead) return;
         isDead = true;
         rb.linearVelocity = Vector2.zero;
-        rb.bodyType = RigidbodyType2D.Kinematic; // Disables physics so the corpse doesn't slide
+        rb.bodyType = RigidbodyType2D.Kinematic;
         anim.SetTrigger(HashDie);
-        GameEvents.TriggerPlayerDied(); 
+        anim.SetBool(HashIsDeadBool, true);  // <--
+        GameEvents.TriggerPlayerDied();
     }
+
     public void Revive()
     {
         isDead = false;
         anim.SetTrigger(HashRevive);
+        anim.SetBool(HashIsDeadBool, false);  // <--
     }
 
 
