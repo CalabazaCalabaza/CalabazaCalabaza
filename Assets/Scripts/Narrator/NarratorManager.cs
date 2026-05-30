@@ -36,17 +36,19 @@ public class NarratorManager : MonoBehaviour
     private IEnumerator PlayQueue()
     {
         isPlaying = true;
-
         while (queue.Count > 0)
         {
             AudioClip clip = queue.Dequeue();
             audioSource.clip = clip;
             audioSource.Play();
 
-            // Wait for the clip to finish before playing the next one
-            yield return new WaitForSeconds(clip.length);
+            float timer = 0f;
+            while (timer < clip.length)
+            {
+                timer += Time.unscaledDeltaTime;
+                yield return null; // Espera exactamente un frame
+            }
         }
-
         isPlaying = false;
     }
 }
