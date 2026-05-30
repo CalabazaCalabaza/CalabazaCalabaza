@@ -194,5 +194,17 @@ public class PlayerController : MonoBehaviour
     }
 
 
+    private void OnCollisionStay2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("MovingPlatform"))
+            transform.SetParent(collision.transform);
+    }
+
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("MovingPlatform"))
+            transform.SetParent(null);
+    }
+
 
 }

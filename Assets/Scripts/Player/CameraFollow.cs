@@ -17,6 +17,15 @@ public class CameraFollow : MonoBehaviour
     [SerializeField] private Vector2 minBounds;
     [SerializeField] private Vector2 maxBounds;
 
+    [Header("Vertical Limit")]
+    [SerializeField] private float minYPosition = -7f;
+
+    [Header("Left Boundary Slowdown")]
+    [SerializeField] private float leftSlowdownX = -7f;      // X position where slowdown starts
+    [SerializeField] private float leftSlowdownRange = 3f;    // How many units before the limit the effect starts
+    [SerializeField] private float maxSlowdownMultiplier = 6f; // How heavy the camera gets at the limit
+
+
     private Vector3 velocity = Vector3.zero;
     private Vector3 targetPosition;
     private PlayerController player;
@@ -60,21 +69,36 @@ public class CameraFollow : MonoBehaviour
 
     private void SmoothFollow()
     {
+        float currentSmoothTime = smoothTime;
+
+        // Calculate how close the player is to the left boundary
+        float distanceToLimit = player.transform.position.x - leftSlowdownX;
+
+        if (distanceToLimit < leftSlowdownRange)
+        {
+            // Remap distance to a 0-1 value and apply slowdown
+            float t = 1f - Mathf.Clamp01(distanceToLimit / leftSlowdownRange);
+            currentSmoothTime = Mathf.Lerp(smoothTime, smoothTime * maxSlowdownMultiplier, t);
+        }
+
         transform.position = Vector3.SmoothDamp(
             transform.position,
             targetPosition,
             ref velocity,
-            smoothTime
+            currentSmoothTime
         );
     }
-
     private void ApplyBounds()
     {
-        if (!useBounds) return;
+        float clampedY = useBounds
+            ? Mathf.Clamp(transform.position.y, minBounds.y, maxBounds.y)
+            : Mathf.Max(transform.position.y, minYPosition);
 
         transform.position = new Vector3(
-            Mathf.Clamp(transform.position.x, minBounds.x, maxBounds.x),
-            Mathf.Clamp(transform.position.y, minBounds.y, maxBounds.y),
+            useBounds
+                ? Mathf.Clamp(transform.position.x, minBounds.x, maxBounds.x)
+                : transform.position.x,
+            clampedY,
             transform.position.z
         );
     }
