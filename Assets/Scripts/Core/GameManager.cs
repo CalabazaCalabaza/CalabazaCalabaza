@@ -55,6 +55,7 @@ public class GameManager : MonoBehaviour
     private void OnPlayerDied()
     {
         Debug.Log("GameManager received death event");
+        player.GetComponent<Animator>().SetBool("IsDead", true);
         StartCoroutine(RespawnRoutine());
     }
 
@@ -81,6 +82,7 @@ public class GameManager : MonoBehaviour
         var rb = player.GetComponent<Rigidbody2D>();
         rb.bodyType = RigidbodyType2D.Dynamic;
         rb.linearVelocity = Vector2.zero;
+        player.GetComponent<Animator>().SetBool("IsDead", false);
 
         player.GetComponent<PlayerController>().Revive();
         player.GetComponent<HealthSystem>().SetLives(checkpointLives);

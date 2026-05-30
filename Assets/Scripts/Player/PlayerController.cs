@@ -60,6 +60,7 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+        if (anim.GetBool(HashIsDeadBool) == true) return;
         if (isDead) return;
         if (!inputEnabled) return;
 
@@ -76,6 +77,7 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (anim.GetBool(HashIsDeadBool) == true) return;
         if (isDead) return;
 
         // Physics operations run in FixedUpdate for consistent framerate-independent behavior
@@ -103,6 +105,8 @@ public class PlayerController : MonoBehaviour
     // Sets horizontal velocity directly, preserving vertical velocity from gravity
     private void Move()
     {
+        if (anim.GetBool(HashIsDeadBool) == true) return;
+
         rb.linearVelocity = new Vector2(moveInput * moveSpeed * speedMultiplier, rb.linearVelocity.y);
 
         if (moveInput > 0 && !isFacingRight) Flip();
@@ -112,6 +116,7 @@ public class PlayerController : MonoBehaviour
     // Applies vertical impulse by overriding the Y velocity
     private void Jump()
     {
+        if (anim.GetBool(HashIsDeadBool) == true) return;
         rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
         hasJumped = true;
         coyoteTimeCounter = 0f;
@@ -144,8 +149,9 @@ public class PlayerController : MonoBehaviour
         isDead = true;
         rb.linearVelocity = Vector2.zero;
         rb.bodyType = RigidbodyType2D.Kinematic;
+        Debug.Log($"Estado actual del Animator: {anim.GetCurrentAnimatorStateInfo(0).fullPathHash}");
         anim.SetTrigger(HashDie);
-        anim.SetBool(HashIsDeadBool, true);  // <--
+        anim.SetBool(HashIsDeadBool, true);
         GameEvents.TriggerPlayerDied();
     }
 

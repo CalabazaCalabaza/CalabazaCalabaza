@@ -5,8 +5,8 @@ public class Checkpoint : MonoBehaviour
 {
     [SerializeField] private AudioClip activateClip;
 
-    private bool isActive;
-    private bool playerIsNear;
+    public SpriteRenderer sprite_;
+    public Sprite activatedCheckpoint;
 
     private void Awake()
     {
@@ -15,28 +15,23 @@ public class Checkpoint : MonoBehaviour
 
     private void Update()
     {
-        if (isActive) return;
-        if (!playerIsNear) return;
 
-        if (Input.GetButtonDown("Jump"))
-            Activate();
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (!other.CompareTag("Player")) return;
-        playerIsNear = true;
+        Activate();
     }
 
     private void OnTriggerExit2D(Collider2D other)
     {
         if (!other.CompareTag("Player")) return;
-        playerIsNear = false;
     }
 
     private void Activate()
     {
-        isActive = true;
+        if (sprite_.sprite == activatedCheckpoint) return;
         GameManager.Instance.SetCheckpoint(transform.position);
         AudioManager.Instance.PlaySFX(activateClip);
         GameEvents.TriggerCheckpointActivated();
@@ -46,6 +41,8 @@ public class Checkpoint : MonoBehaviour
     // Hook para el artista — cambiar sprite, activar partículas, etc.
     private void OnActivated()
     {
+        sprite_.sprite = activatedCheckpoint;
+        Debug.Log("sprite swapeado");
     }
 
     private void OnDrawGizmosSelected()
