@@ -5,10 +5,6 @@ public class Hazard : MonoBehaviour
 {
     [SerializeField] private AudioClip damageClip;
 
-    private void Awake()
-    {
-        GetComponent<Collider2D>().isTrigger = true;
-    }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
