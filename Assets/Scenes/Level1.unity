@@ -2573,6 +2573,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1571204094}
   - {fileID: 1496741466}
   m_Father: {fileID: 428588297}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -11050,8 +11051,8 @@ Transform:
   m_GameObject: {fileID: 829808786}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -49.12, y: -11.35, z: 0}
-  m_LocalScale: {x: 33.321026, y: 1, z: 1}
+  m_LocalPosition: {x: -9.5795, y: -11.35, z: 0}
+  m_LocalScale: {x: 197.51779, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1784412747}
@@ -24740,7 +24741,6 @@ Transform:
   m_Children:
   - {fileID: 1278360857}
   - {fileID: 487717647}
-  - {fileID: 1571204094}
   - {fileID: 1841691874}
   - {fileID: 1164495742}
   m_Father: {fileID: 214170820}
@@ -24944,10 +24944,10 @@ AudioSource:
   SpatializePostEffects: 0
   Priority: 128
   DopplerLevel: 1
-  MinDistance: 1
+  MinDistance: 0
   MaxDistance: 500
   Pan2D: 0
-  rolloffMode: 0
+  rolloffMode: 1
   BypassEffects: 0
   BypassListenerEffects: 0
   BypassReverbZones: 0
@@ -25033,7 +25033,7 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 8300000, guid: b11b19d7edc0ec1408c211f2d12eebfe, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.7
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -25041,10 +25041,10 @@ AudioSource:
   SpatializePostEffects: 0
   Priority: 128
   DopplerLevel: 1
-  MinDistance: 1
+  MinDistance: 0
   MaxDistance: 500
   Pan2D: 0
-  rolloffMode: 0
+  rolloffMode: 1
   BypassEffects: 0
   BypassListenerEffects: 0
   BypassReverbZones: 0
@@ -26330,7 +26330,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1571204094}
-  - component: {fileID: 1571204096}
+  - component: {fileID: 1571204097}
   - component: {fileID: 1571204095}
   m_Layer: 0
   m_Name: Narrator
@@ -26348,11 +26348,11 @@ Transform:
   m_GameObject: {fileID: 1571204093}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -5.34, y: -2.6, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1496741466}
+  m_Father: {fileID: 214170820}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1571204095
 MonoBehaviour:
@@ -26366,7 +26366,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11628371a0eb8e74e900b0bcde797613, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NarratorManager
---- !u!82 &1571204096
+--- !u!82 &1571204097
 AudioSource:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -26423,7 +26423,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0.5
+      value: 0
       inSlope: 0
       outSlope: 0
       tangentMode: 0
